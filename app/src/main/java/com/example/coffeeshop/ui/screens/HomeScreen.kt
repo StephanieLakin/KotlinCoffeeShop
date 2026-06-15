@@ -18,17 +18,19 @@ import com.example.coffeeshop.data.sampleCoffees
 @Composable
 fun HomeScreen() {
     LazyColumn(
-        modifier = Modifier.fillMaxSize()
-            .background(Color(0xff3e2723)) // darkBrown
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF3E2723))
     ) {
         item {
             // Greeting
             Column(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(20.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
             ) {
                 Text(
-                    text = "Good morning, Sunshine ☕",
+                    text = "Good morning, Stephanie ☕",
                     style = MaterialTheme.typography.headlineMedium,
                     color = Color.White,
                     fontWeight = FontWeight.Bold
@@ -40,10 +42,12 @@ fun HomeScreen() {
                 )
             }
         }
+
         item {
             // Banner
             Card(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .height(160.dp)
                     .padding(horizontal = 16.dp),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF5D4037))
@@ -62,8 +66,9 @@ fun HomeScreen() {
             }
         }
 
+        item { Spacer(modifier = Modifier.height(24.dp)) }
+
         item {
-            Spacer(modifier = Modifier.height(24.dp))
             Text(
                 text = "Categories",
                 style = MaterialTheme.typography.titleLarge,
@@ -73,7 +78,6 @@ fun HomeScreen() {
             Spacer(modifier = Modifier.height(12.dp))
         }
 
-        // Categories
         item {
             LazyRow(
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -89,8 +93,9 @@ fun HomeScreen() {
             }
         }
 
+        item { Spacer(modifier = Modifier.height(24.dp)) }
+
         item {
-            Spacer(modifier = Modifier.height(24.dp))
             Text(
                 text = "Popular This Week",
                 style = MaterialTheme.typography.titleLarge,
@@ -100,13 +105,14 @@ fun HomeScreen() {
             Spacer(modifier = Modifier.height(12.dp))
         }
 
-        // Coffee List
+        // Coffee Items
         items(sampleCoffees) { coffee ->
             CoffeeItem(coffee = coffee)
         }
 
+        // Extra space at the bottom so you can scroll comfortably
         item {
-            Spacer(modifier = Modifier.height(100.dp))
+            Spacer(modifier = Modifier.height(120.dp))
         }
     }
 }
