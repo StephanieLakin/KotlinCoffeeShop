@@ -17,6 +17,13 @@ import com.example.coffeeshop.ui.theme.CoffeeShopTheme
 import com.example.coffeeshop.ui.navigation.BottomNavBar
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.NavType
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.coffeeshop.ui.screens.CoffeeDetailScreen
+import com.example.coffeeshop.data.sampleCoffees
 
 
 class MainActivity : ComponentActivity() {
@@ -34,7 +41,39 @@ class MainActivity : ComponentActivity() {
                         startDestination = "home",
                         modifier = Modifier.padding(paddingValues)
                     ) {
-                        composable("home") { HomeScreen() }
+                        composable("home") {
+                            HomeScreen(
+                                onCoffeeClick = { coffee ->
+                                    navController.navigate("detail/${coffee.id}")
+                                }
+                            )
+                        }
+
+                        composable(
+                            route = "detail/{coffeeId}",
+                            arguments = listOf(navArgument("coffeeId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val coffeeId = backStackEntry.arguments?.getString("coffeeId")
+                            val coffee = sampleCoffees.find { it.id == coffeeId }
+
+                            if (coffee != null) {
+                                CoffeeDetailScreen(
+                                    coffee = coffee,
+                                    onBackClick = { navController.popBackStack() },
+                                    onAddToCart = {
+                                        println("Added ${coffee.name} to cart")
+                                    }
+                                )
+                            } else {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text("Coffee not found", color = Color.White)
+                                }
+                            }
+                        }
+
                         composable("favorites") { FavoritesScreen() }
                         composable("cart") { CartScreen() }
                         composable("profile") { ProfileScreen() }
@@ -45,7 +84,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// Improved Placeholder Screens
+// Placeholder Screens
 @Composable
 fun FavoritesScreen() {
     Box(
@@ -54,7 +93,7 @@ fun FavoritesScreen() {
             .background(Color(0xFF3E2723)),
         contentAlignment = Alignment.Center
     ) {
-        Text("❤️ Favorites Screen (Coming Soon)", color = Color.White)
+        Text("❤️ Favorites (Coming Soon)", color = Color.White)
     }
 }
 
@@ -66,7 +105,7 @@ fun CartScreen() {
             .background(Color(0xFF3E2723)),
         contentAlignment = Alignment.Center
     ) {
-        Text("🛒 Cart Screen (Coming Soon)", color = Color.White)
+        Text("🛒 Cart (Coming Soon)", color = Color.White)
     }
 }
 
@@ -78,6 +117,6 @@ fun ProfileScreen() {
             .background(Color(0xFF3E2723)),
         contentAlignment = Alignment.Center
     ) {
-        Text("👤 Profile Screen (Coming Soon)", color = Color.White)
+        Text("👤 Profile (Coming Soon)", color = Color.White)
     }
 }

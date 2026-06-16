@@ -1,6 +1,5 @@
 package com.example.coffeeshop.ui.screens
 
-import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,10 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.coffeeshop.data.Coffee
 import com.example.coffeeshop.data.sampleCoffees
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onCoffeeClick: (Coffee) -> Unit = {}
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -107,7 +109,10 @@ fun HomeScreen() {
 
         // Coffee Items
         items(sampleCoffees) { coffee ->
-            CoffeeItem(coffee = coffee)
+            CoffeeItem(
+                coffee = coffee,
+                onClick = { onCoffeeClick(coffee) }
+            )
         }
 
         // Extra space at the bottom so you can scroll comfortably

@@ -12,15 +12,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.coffeeshop.data.Coffee
-
+import androidx.compose.material3.FloatingActionButtonDefaults.elevation
+import androidx.compose.foundation.clickable
 @Composable
-fun CoffeeItem(coffee: Coffee) {
+fun CoffeeItem(coffee: Coffee, onClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable(onClick = onClick),     // ← Important
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
+    ){
         Row(
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
