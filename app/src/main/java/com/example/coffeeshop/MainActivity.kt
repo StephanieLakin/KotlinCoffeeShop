@@ -5,12 +5,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.coffeeshop.ui.screens.HomeScreen
 import com.example.coffeeshop.ui.theme.CoffeeShopTheme
@@ -22,8 +29,15 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.coffeeshop.data.CartManager
 import com.example.coffeeshop.ui.screens.CoffeeDetailScreen
 import com.example.coffeeshop.data.sampleCoffees
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import com.example.coffeeshop.data.CartItem
+import com.example.coffeeshop.data.CartManager.cartItems
 
 
 class MainActivity : ComponentActivity() {
@@ -60,9 +74,10 @@ class MainActivity : ComponentActivity() {
                                 CoffeeDetailScreen(
                                     coffee = coffee,
                                     onBackClick = { navController.popBackStack() },
-                                    onAddToCart = {
-                                        println("Added ${coffee.name} to cart")
-                                    }
+//                                    onAddToCart = {
+//                                        // TODO: Add to cart later
+//                                        println("Added ${coffee.name} to cart")
+//                                    }
                                 )
                             } else {
                                 Box(
@@ -99,13 +114,63 @@ fun FavoritesScreen() {
 
 @Composable
 fun CartScreen() {
+    val items = CartManager.cartItems
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF3E2723)),
-        contentAlignment = Alignment.Center
+//        contentAlignment = Alignment.Center
     ) {
-        Text("🛒 Cart (Coming Soon)", color = Color.White)
+        if (items.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Your cart is empty 🛒", color = Color.White)
+            }
+        } else {
+            Column {
+                Text(
+                    text = "Your Cart (${items.size} items)",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.White,
+                    modifier = Modifier.padding(16.dp)
+                )
+                LazyColumn(modifier = Modifier.weight(1f)) {
+                    items(CartManager.cartItems) { item ->
+                        CartItemRow(
+                            item = item,
+                            onRemoveFromCart = {
+                                CartManager.removeFromCart(item.coffee)
+                            }
+                        )
+                    }
+                }
+                // Total & Checkout Btn
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF5D4037))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        val totalPrice = cartItems.sumOf { it.coffee.price * it.quantity }
+                        Text(
+                            text = "Total: $${totalPrice}",
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = Color.White
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Button(
+                            onClick = { CartManager.clearCart() },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Proceed to Checkout", color = Color.White)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -118,5 +183,26 @@ fun ProfileScreen() {
         contentAlignment = Alignment.Center
     ) {
         Text("👤 Profile (Coming Soon)", color = Color.White)
+    }
+}
+@Composable
+fun CartItemRow(
+    item: CartItem,
+    onRemoveFromCart: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column {
+            Text(text = item.coffee.name)
+            Text(text = "Qty: ${item.quantity}")
+        }
+
+        IconButton(onClick = onRemoveFromCart) {
+            Icon(Icons.Default.Delete, contentDescription = "Remove")
+        }
     }
 }

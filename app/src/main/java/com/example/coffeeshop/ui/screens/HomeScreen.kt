@@ -32,7 +32,7 @@ fun HomeScreen(
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Good morning, Stephanie ☕",
+                    text = "Good morning, Sunshine! ☕",
                     style = MaterialTheme.typography.headlineMedium,
                     color = Color.White,
                     fontWeight = FontWeight.Bold
@@ -44,7 +44,6 @@ fun HomeScreen(
                 )
             }
         }
-
         item {
             // Banner
             Card(

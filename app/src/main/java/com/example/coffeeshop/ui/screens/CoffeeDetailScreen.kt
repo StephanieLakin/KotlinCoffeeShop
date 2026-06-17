@@ -17,13 +17,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-
+import com.example.coffeeshop.data.CartManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CoffeeDetailScreen(
     coffee: Coffee,
-    onAddToCart: (Coffee) -> Unit,
     onBackClick: () -> Unit
 ) {
     Column(
@@ -48,6 +47,14 @@ fun CoffeeDetailScreen(
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = Color(0xFF3E2723)
             )
+        )
+        AsyncImage(
+            model = coffee.imageUrl,
+            contentDescription = coffee.name,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(280.dp),
+            contentScale = ContentScale.Crop
         )
         Column(
             modifier = Modifier
@@ -87,10 +94,10 @@ fun CoffeeDetailScreen(
                     fontWeight = FontWeight.Bold
                 )
                 Button(
-                    onClick = { onAddToCart(coffee) },
+                    onClick = { CartManager.addToCart(coffee) },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107))
                 ) {
-                    Text("Add to Cart", color = Color.Black)
+                    Text("Add to Cart", color = Color.Black, fontWeight = FontWeight.Bold)
                 }
             }
         }
